@@ -1,0 +1,111 @@
+    <div class="App">
+      <header class="App-header">
+        <div class="logo-container">
+          <img [src]="logo" class="App-logo" alt="Avalpha Technologies Logo" />
+          <h1 class="company-title">Avalpha Technologies</h1>
+          <h2 class="app-subtitle">Commission Calculator</h2>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div class="calculator-container">
+          <div class="form-section">
+            <h3>Sales Information</h3>
+            <form [formGroup]="calculatorForm" (ngSubmit)="handleSubmit()" class="calculator-form">
+              <div class="form-group">
+                <label for="localSalesCount">Local Sales Count</label>
+                <input 
+                  type="number" 
+                  id="localSalesCount"
+                  name="localSalesCount"
+                  formControlName="localSalesCount"
+                  placeholder="Enter number of local sales"
+                  [class.error]="localSalesCount?.invalid && localSalesCount?.touched"
+                />
+                <div class="error-message" *ngIf="localSalesCount?.invalid && localSalesCount?.touched">
+                  <span *ngIf="localSalesCount?.errors?.['required']">Local sales count is required.</span>
+                  <span *ngIf="localSalesCount?.errors?.['min']">Local sales count cannot be less than 0.</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="foreignSalesCount">Foreign Sales Count</label>
+                <input 
+                  type="number" 
+                  id="foreignSalesCount"
+                  name="foreignSalesCount"
+                  formControlName="foreignSalesCount"
+                  placeholder="Enter number of foreign sales"
+                  [class.error]="foreignSalesCount?.invalid && foreignSalesCount?.touched"
+                />
+                <div class="error-message" *ngIf="foreignSalesCount?.invalid && foreignSalesCount?.touched">
+                  <span *ngIf="foreignSalesCount?.errors?.['required']">Foreign sales count is required.</span>
+                  <span *ngIf="foreignSalesCount?.errors?.['min']">Foreign sales count cannot be less than 0.</span>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="averageSaleAmount">Average Sale Amount (£)</label>
+                <input 
+                  type="number" 
+                  step="0.01"
+                  id="averageSaleAmount"
+                  name="averageSaleAmount"
+                  formControlName="averageSaleAmount"
+                  placeholder="Enter average sale amount"
+                  [class.error]="averageSaleAmount?.invalid && averageSaleAmount?.touched"
+                />
+                <div class="error-message" *ngIf="averageSaleAmount?.invalid && averageSaleAmount?.touched">
+                  <span *ngIf="averageSaleAmount?.errors?.['required']">Average sale amount is required.</span>
+                  <span *ngIf="averageSaleAmount?.errors?.['min']">Average sale amount cannot be less than 0.</span>
+                </div>
+              </div>
+
+              <button 
+                type="submit" 
+                [disabled]="isLoading || calculatorForm.invalid"
+                [ngClass]="{ 'calculate-btn': true, 'loading': isLoading }"
+              >
+                {{isLoading ? 'Calculating...' : 'Calculate Commission'}}
+              </button>
+            </form>
+          </div>
+
+          <div class="results-section">
+            <h3>Commission Results</h3>
+            <div class="results-grid">
+              <div class="result-card avalpha-card">
+                <div class="result-header">
+                  <h4>Avalpha Technologies</h4>
+                  <span class="commission-rates">Local: 20% | Foreign: 35%</span>
+                </div>
+                <div class="result-amount">
+                  £{{results.avalphaTechnologiesCommission.toFixed(2)}}
+                </div>
+              </div>
+              
+              <div class="result-card competitor-card">
+                <div class="result-header">
+                  <h4>Competitor</h4>
+                  <span class="commission-rates">Local: 2% | Foreign: 7.55%</span>
+                </div>
+                <div class="result-amount">
+                  £{{results.competitorCommission.toFixed(2)}}
+                </div>
+              </div>
+            </div>
+            
+            <div class="advantage-indicator" *ngIf="results.avalphaTechnologiesCommission > 0">
+              <p class="advantage-text">
+                Avalpha Technologies advantage: 
+                <strong> £{{(results.avalphaTechnologiesCommission - results.competitorCommission).toFixed(2)}}</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="App-footer">
+        <p>&copy; 2025 Avalpha Technologies. All rights reserved.</p>
+      </footer>
+    </div>
