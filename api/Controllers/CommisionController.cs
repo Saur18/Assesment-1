@@ -1,3 +1,5 @@
+using api.Domain.Entities;
+using api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AvalphaTechnologies.CommissionCalculator.Controllers
@@ -6,6 +8,13 @@ namespace AvalphaTechnologies.CommissionCalculator.Controllers
     [Route("[controller]")]
     public class CommisionController : ControllerBase
     {
+        private readonly ICommissionService _commissionService;
+
+        public CommisionController(ICommissionService commissionService)
+        {
+            _commissionService = commissionService;
+        }
+
         [ProducesResponseType(typeof(CommissionCalculationResponse), 200)]
         [HttpPost]
         public IActionResult Calculate(CommissionCalculationRequest calculationRequest)
@@ -15,19 +24,5 @@ namespace AvalphaTechnologies.CommissionCalculator.Controllers
                 CompetitorCommissionAmount = 100
             });
         }
-    }
-
-    public class CommissionCalculationRequest
-    {
-        public int LocalSalesCount { get; set; }
-        public int ForeignSalesCount { get; set; }
-        public decimal AverageSaleAmount { get; set; }
-    }
-
-    public class CommissionCalculationResponse
-    {
-        public decimal AvalphaTechnologiesCommissionAmount { get; set; }
-
-        public decimal CompetitorCommissionAmount { get; set; }
     }
 }
