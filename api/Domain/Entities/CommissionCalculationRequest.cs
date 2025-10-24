@@ -9,6 +9,7 @@ namespace api.Domain.Entities
     {
         public int LocalSalesCount { get; set; }
         public int ForeignSalesCount { get; set; }
-        public decimal AverageSaleAmount { get; set; }
+        public int AverageSaleAmount { get; set; }
+
     }
 }

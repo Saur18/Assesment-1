@@ -8,7 +8,7 @@ namespace api.Services
 {
     public interface ICommissionService
     {
-        Task<decimal> CalculateAvalphaCommission(CommissionCalculationRequest calculationRequest);
-        Task<decimal> CalculateCompetitorCommission(CommissionCalculationRequest calculationRequest);
+        decimal CalculateAvalphaCommission(CommissionCalculationRequest calculationRequest);
+        decimal CalculateCompetitorCommission(CommissionCalculationRequest calculationRequest);
     }
 }

@@ -1,6 +1,7 @@
 
 using api.Repositories;
 using api.Services;
+using AvalphaTechnologies.CommissionCalculator.Domain.Config;
 using AvalphaTechnologies.CommissionCalculator.Services;
 
 namespace AvalphaTechnologies.CommissionCalculator
@@ -19,6 +20,9 @@ namespace AvalphaTechnologies.CommissionCalculator
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<ICommissionRepository, CommissionRepository>();
             builder.Services.AddScoped<ICommissionService, CommissionService>();
+            builder.Services.Configure<CommissionPercentage>(
+                builder.Configuration.GetSection("CommissionPercentage"));
+
 
             var app = builder.Build();
 

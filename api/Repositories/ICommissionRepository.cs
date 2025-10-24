@@ -8,7 +8,7 @@ namespace api.Repositories
 {
     public interface ICommissionRepository
     {
-        Task<decimal> CalculateAvalphaCommission(CommissionCalculationRequest calculationRequest);
-        Task<decimal> CalculateCompetitorCommission(CommissionCalculationRequest calculationRequest);
+        decimal CalculateAvalphaCommission(CommissionCalculationRequest calculationRequest);
+        decimal CalculateCompetitorCommission(CommissionCalculationRequest calculationRequest);
     }
 }
