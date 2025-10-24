@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Domain.Entities;
+using api.Domain.Enums;
 
 namespace api.Services
 {
     public interface ICommissionService
     {
-        decimal CalculateAvalphaCommission(CommissionCalculationRequest calculationRequest);
-        decimal CalculateCompetitorCommission(CommissionCalculationRequest calculationRequest);
+        decimal CalculateCommission(CommissionCalculationRequest calculationRequest, CommissionTypeEnum commissionTypeEnum);
     }
 }
