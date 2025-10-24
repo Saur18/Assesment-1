@@ -1,4 +1,5 @@
 using api.Domain.Entities;
+using api.Domain.Enums;
 using api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,10 +20,21 @@ namespace AvalphaTechnologies.CommissionCalculator.Controllers
         [HttpPost]
         public IActionResult Calculate(CommissionCalculationRequest calculationRequest)
         {
-            return Ok(new CommissionCalculationResponse() { 
-                AvalphaTechnologiesCommissionAmount = 999,
-                CompetitorCommissionAmount = 100
-            });
+            try
+            {
+                decimal avalphaCommission = _commissionService.CalculateCommission(calculationRequest, CommissionTypeEnum.Avalpha);
+                decimal competitorCommission = _commissionService.CalculateCommission(calculationRequest, CommissionTypeEnum.Competitor);
+
+                return Ok(new CommissionCalculationResponse()
+                {
+                    AvalphaTechnologiesCommissionAmount = avalphaCommission,
+                    CompetitorCommissionAmount = competitorCommission
+                });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }
