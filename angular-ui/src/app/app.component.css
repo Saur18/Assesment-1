@@ -110,6 +110,28 @@
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
 }
 
+.form-group input.error {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.form-group input.error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+}
+
+.error-message {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.error-message span {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
 .calculate-btn {
   padding: 1.2rem 2rem;
   background: linear-gradient(45deg, #667eea, #764ba2);

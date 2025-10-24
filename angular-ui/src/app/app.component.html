@@ -11,17 +11,21 @@
         <div class="calculator-container">
           <div class="form-section">
             <h3>Sales Information</h3>
-            <form (ngSubmit)="handleSubmit()" class="calculator-form">
+            <form [formGroup]="calculatorForm" (ngSubmit)="handleSubmit()" class="calculator-form">
               <div class="form-group">
                 <label for="localSalesCount">Local Sales Count</label>
                 <input 
                   type="number" 
                   id="localSalesCount"
                   name="localSalesCount"
-                  [(ngModel)]="formData.localSalesCount"
+                  formControlName="localSalesCount"
                   placeholder="Enter number of local sales"
-                  required
+                  [class.error]="localSalesCount?.invalid && localSalesCount?.touched"
                 />
+                <div class="error-message" *ngIf="localSalesCount?.invalid && localSalesCount?.touched">
+                  <span *ngIf="localSalesCount?.errors?.['required']">Local sales count is required.</span>
+                  <span *ngIf="localSalesCount?.errors?.['min']">Local sales count cannot be less than 0.</span>
+                </div>
               </div>
 
               <div class="form-group">
@@ -30,10 +34,14 @@
                   type="number" 
                   id="foreignSalesCount"
                   name="foreignSalesCount"
-                  [(ngModel)]="formData.foreignSalesCount"
+                  formControlName="foreignSalesCount"
                   placeholder="Enter number of foreign sales"
-                  required
+                  [class.error]="foreignSalesCount?.invalid && foreignSalesCount?.touched"
                 />
+                <div class="error-message" *ngIf="foreignSalesCount?.invalid && foreignSalesCount?.touched">
+                  <span *ngIf="foreignSalesCount?.errors?.['required']">Foreign sales count is required.</span>
+                  <span *ngIf="foreignSalesCount?.errors?.['min']">Foreign sales count cannot be less than 0.</span>
+                </div>
               </div>
               
               <div class="form-group">
@@ -43,15 +51,19 @@
                   step="0.01"
                   id="averageSaleAmount"
                   name="averageSaleAmount"
-                  [(ngModel)]="formData.averageSaleAmount"
+                  formControlName="averageSaleAmount"
                   placeholder="Enter average sale amount"
-                  required
+                  [class.error]="averageSaleAmount?.invalid && averageSaleAmount?.touched"
                 />
+                <div class="error-message" *ngIf="averageSaleAmount?.invalid && averageSaleAmount?.touched">
+                  <span *ngIf="averageSaleAmount?.errors?.['required']">Average sale amount is required.</span>
+                  <span *ngIf="averageSaleAmount?.errors?.['min']">Average sale amount cannot be less than 0.</span>
+                </div>
               </div>
 
               <button 
                 type="submit" 
-                [disabled]="isLoading"
+                [disabled]="isLoading || calculatorForm.invalid"
                 [ngClass]="{ 'calculate-btn': true, 'loading': isLoading }"
               >
                 {{isLoading ? 'Calculating...' : 'Calculate Commission'}}
