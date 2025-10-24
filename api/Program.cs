@@ -15,6 +15,21 @@ namespace AvalphaTechnologies.CommissionCalculator
             // Add services to the container.
 
             builder.Services.AddControllers();
+
+            // Add CORS policy
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularApp", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
+
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -34,6 +49,8 @@ namespace AvalphaTechnologies.CommissionCalculator
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AllowAngularApp");
 
             app.UseAuthorization();
 

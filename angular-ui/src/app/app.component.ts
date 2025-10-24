@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { CommissionServiceService } from '../services/commission-service.service';
+import { CommissionCalculationRequest } from '../data/commission-calculation-request';
+import { CommissionCalculationResponse } from '../data/commission-calculation-response';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +24,10 @@ export class AppComponent {
   };
 
   //Added form controls for individual field validation.
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private commissionService: CommissionServiceService
+  ) {
     this.calculatorForm = this.fb.group({
       localSalesCount: [0, [Validators.required, Validators.min(0)]],
       foreignSalesCount: [0, [Validators.required, Validators.min(0)]],
@@ -39,23 +45,47 @@ export class AppComponent {
       this.isLoading = true;
       
       const formValues = this.calculatorForm.value;
-      const totalLocalSales = formValues.localSalesCount * formValues.averageSaleAmount;
-      const totalForeignSales = formValues.foreignSalesCount * formValues.averageSaleAmount;
       
-      const avalphaLocalCommission = totalLocalSales * 0.20;
-      const avalphaForeignCommission = totalForeignSales * 0.35;
-      this.results.avalphaTechnologiesCommission = avalphaLocalCommission + avalphaForeignCommission;
+      // Create request object
+      const request: CommissionCalculationRequest = {
+        localSalesCount: formValues.localSalesCount,
+        foreignSalesCount: formValues.foreignSalesCount,
+        averageSaleAmount: formValues.averageSaleAmount
+      };
       
-      const competitorLocalCommission = totalLocalSales * 0.02;
-      const competitorForeignCommission = totalForeignSales * 0.0755;
-      this.results.competitorCommission = competitorLocalCommission + competitorForeignCommission;
-      
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 1000);
+      // Call the service to get commission calculations
+      this.commissionService.getTotalCommission(request).subscribe({
+        next: (response: CommissionCalculationResponse) => {
+          // Map response to results object
+          this.results.avalphaTechnologiesCommission = response.avalphaTechnologiesCommissionAmount;
+          this.results.competitorCommission = response.competitorCommissionAmount;
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error calculating commission:', error);
+          // Keep local calculation as fallback
+          this.calculateLocally(formValues);
+          this.isLoading = false;
+        }
+      });
     } else {
       // Mark all fields as touched to show validation errors
       this.calculatorForm.markAllAsTouched();
     }
   }
+
+  // Fallback method for local calculation in case service fails
+  private calculateLocally(formValues: any) {
+    const totalLocalSales = formValues.localSalesCount * formValues.averageSaleAmount;
+    const totalForeignSales = formValues.foreignSalesCount * formValues.averageSaleAmount;
+    
+    const avalphaLocalCommission = totalLocalSales * 0.20;
+    const avalphaForeignCommission = totalForeignSales * 0.35;
+    this.results.avalphaTechnologiesCommission = avalphaLocalCommission + avalphaForeignCommission;
+    
+    const competitorLocalCommission = totalLocalSales * 0.02;
+    const competitorForeignCommission = totalForeignSales * 0.0755;
+    this.results.competitorCommission = competitorLocalCommission + competitorForeignCommission;
+  }
+
 }
